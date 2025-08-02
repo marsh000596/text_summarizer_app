@@ -1,0 +1,84 @@
+
+🔧 Project Overview
+Goal: Build a web-based text summarizer using Hugging Face Transformers (facebook/bart-large-cnn).
+
+UI Framework: Streamlit
+
+Language: Python
+
+text_summarizer_app/
+├── app.py                 ← Streamlit main app
+├── requirements.txt       ← Python dependencies
+└── README.md              ← (Optional) project description
+
+1. Install Python (>=3.8)
+If not installed:
+
+bash
+Copy
+Edit
+https://www.python.org/downloads/
+
+2. Set up virtual environment (recommended)
+bash
+Copy
+Edit
+cd text_summarizer_app
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
+
+📦 requirements.txt
+Create this file inside text_summarizer_app/:
+
+txt
+Copy
+Edit
+streamlit
+transformers
+torch
+
+pip install -r requirements.txt
+
+ app.py (Streamlit UI)
+python
+Copy
+Edit
+import streamlit as st
+from transformers import pipeline
+
+# Set up Streamlit app UI
+st.set_page_config(page_title="Text Summarizer", layout="wide")
+st.title("📝 Hugging Face Text Summarizer")
+
+# Text input
+user_input = st.text_area("Enter the text you want to summarize", height=250)
+
+# Load summarization pipeline
+@st.cache_resource
+def load_summarizer():
+    return pipeline("summarization", model="facebook/bart-large-cnn")
+
+summarizer = load_summarizer()
+
+# Button to generate summary
+if st.button("Summarize"):
+    if user_input.strip():
+        with st.spinner("Summarizing..."):
+            summary = summarizer(user_input, max_length=130, min_length=30, do_sample=False)[0]["summary_text"]
+            st.subheader("Summary:")
+            st.success(summary)
+    else:
+        st.warning("Please enter some text to summarize.")
+		
+		
+		
+
+
+streamlit run app.py
+sample input= Artificial Intelligence (AI) refers to the simulation of human intelligence in machines that are programmed to think and act like humans. The term may also be applied to any machine that exhibits traits associated with a human mind such as learning and problem-solving.
+
+Xet Storage is enabled for this repo, but the 'hf_xet' package is not installed. Falling back to regular HTTP download. 
+For better performance, install the package with: `pip install huggingface_hub[hf_xet]` or `pip install hf_xet`
